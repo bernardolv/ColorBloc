@@ -38,6 +38,9 @@ public class Tile{
 
 }
 
+
+
+
 public class LevelBuilder : MonoBehaviour
 {	
 	// For referencing
@@ -53,13 +56,41 @@ public class LevelBuilder : MonoBehaviour
 	// Object prefab for instantiation
 	public GameObject tileObject;
 
-	// Contains the parent gameobject where the tile gameobjects will be placed in
+	// Contains the boardsize for calculating position
 	public GameObject boardObject;
+
+	// tile gameobjects become child of this guy
+	public GameObject tileCanvas;
+
+	// Stores the tile gameobjects
+	public List<GameObject> tileGameObjects = new List<GameObject>();
+
+	void Start(){
+		int tileSize = (int)boardDimension.x * (int)boardDimension.y;
+		Debug.Log(tileSize + " number of tiles");
+		InitializeTileList(tileSize);
+		//BuildBase(boardDimension);
+		BuildMap("Test");
+
+	}
+
+
+	private void InitializeTileList(int size){
+		for(int i=0; i<size; i++){
+			GameObject newTile = (GameObject)Instantiate(tileObject,new Vector3(0,0,0), tileObject.transform.rotation);
+			newTile.transform.parent = tileCanvas.transform;
+			newTile.transform.localPosition = new Vector2(0,0);
+			newTile.transform.localScale = new Vector3(1,1,1);
+			tileGameObjects.Add(newTile);
+
+		}
+	}
 
 
 	// To be called by Game Manager with a seed representing the map, 
 	// this is the main function where everything will run in.
 	public void BuildMap(string seed){
+		//ResetValues();
 		boardDimension = BoardSize(seed);
 		BuildBase(boardDimension);
 	}
@@ -74,13 +105,27 @@ public class LevelBuilder : MonoBehaviour
 	// Used to build the base of the grid and populating tiles array 
 	private void BuildBase(Vector2 boardSize){
 		tiles = new Tile[(int)boardSize.x, (int)boardSize.y];
+		int tileNumber = 0;
+		for(int i=0; i<boardSize.x; i++){
+			for(int j=0; j<boardSize.y; j++){
+				CreateTile(new Vector2(j,i), tileNumber);
+				tileNumber++;
+			}
+		}
 	}
 
 
 	// Created Tile Class at position and adds it to the tiles 2d Array
-	private void CreateTile(Vector2 location){
+	private void CreateTile(Vector2 location, int tileNumber){
+		tiles[(int)location.x, (int)location.y] = new Tile(tileGameObjects[tileNumber], location, ScreenPosition(location));
+		tileGameObjects[tileNumber].transform.localPosition = ScreenPosition(location);
 
 	}
 
 
+	// Receives Unit position and returns the on-scren value, which multiplies the unit with the size of the grid in pixels
+	private Vector2 ScreenPosition(Vector2 location){
+		int unitScale = 100;
+		return new Vector2(location.x*unitScale,-location.y*unitScale);
+	}
 }
