@@ -46,26 +46,42 @@ public class LevelBuilder : MonoBehaviour
 	// For referencing
 	public static LevelBuilder Instance;
 
-	// These are to be used as proportions when building base
+	// These are to be used as proportions when building array grids (tiles, horizontal and vertical portals)
 	public Vector2 boardDimension;
 
 	// Will hold the Tile Classes which contain the object, its position, and it's type.
 	// The grid position will consist of its 2darray position
 	public Tile [,] tiles;
 
-	// Object prefab for instantiation
+	//public Column[,] columns;
+
+	//public Row[,] rows;
+
+	// Tile prefab for instantiation
 	public GameObject tileObject;
 
-	// Contains the boardsize for calculating position
+	// Contains the boardsize gameobject for calculating position
 	public GameObject boardObject;
 
-	// tile gameobjects become child of this guy
+	// this will give the unit scale for moving 1 tile. It will depend on boardDimension and Canvas Reference Resolution
+	public int unitScale;
+
+	// tile gameobjects instantiated become child of this guy
 	public GameObject tileCanvas;
 
 	// Stores the tile gameobjects
 	public List<GameObject> tileGameObjects = new List<GameObject>();
 
+	// Stores the row gameobjects
+	public List<GameObject> rowGameObjects = new List<GameObject>();
+
+	// Stores the column gameobjects
+	public List <GameObject> columnGameObjects = new List<GameObject>();
+
+
+
 	void Start(){
+		boardDimension = new Vector2(6,6);
 		int tileSize = (int)boardDimension.x * (int)boardDimension.y;
 		Debug.Log(tileSize + " number of tiles");
 		InitializeTileList(tileSize);
@@ -92,6 +108,7 @@ public class LevelBuilder : MonoBehaviour
 	public void BuildMap(string seed){
 		//ResetValues();
 		boardDimension = BoardSize(seed);
+		ResizeAssets();
 		BuildBase(boardDimension);
 	}
 
@@ -114,18 +131,19 @@ public class LevelBuilder : MonoBehaviour
 		}
 	}
 
+	private void ResizeAssets(){
 
-	// Created Tile Class at position and adds it to the tiles 2d Array
+	}
+
+	// Created Tile Class at position and adds it to the tiles 2d Array and world;
 	private void CreateTile(Vector2 location, int tileNumber){
 		tiles[(int)location.x, (int)location.y] = new Tile(tileGameObjects[tileNumber], location, ScreenPosition(location));
 		tileGameObjects[tileNumber].transform.localPosition = ScreenPosition(location);
-
 	}
 
 
 	// Receives Unit position and returns the on-scren value, which multiplies the unit with the size of the grid in pixels
 	private Vector2 ScreenPosition(Vector2 location){
-		int unitScale = 100;
 		return new Vector2(location.x*unitScale,-location.y*unitScale);
 	}
 }

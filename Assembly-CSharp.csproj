@@ -57,6 +57,7 @@
   <ItemGroup>
      <Compile Include="Assets\Scripts\GameManager.cs" />
      <Compile Include="Assets\Scripts\LevelBuilder.cs" />
+     <Compile Include="Assets\Scripts\PlayerMovement.cs" />
  <Reference Include="Unity.Timeline.Editor">
  <HintPath>/Users/bernardolimon/Documents/GitHub/ColorBloc/Library/ScriptAssemblies/Unity.Timeline.Editor.dll</HintPath>
  </Reference>
