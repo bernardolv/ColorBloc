@@ -1956,6 +1956,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cbfb140065b0340bd8361767d1b6b7e4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  pathTiles: []
+  speed: 1200
+  blocIdle: 0
 --- !u!1 &2025450191
 GameObject:
   m_ObjectHideFlags: 0

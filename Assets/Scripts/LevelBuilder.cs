@@ -81,6 +81,9 @@ public class LevelBuilder : MonoBehaviour
 	public List <GameObject> columnGameObjects = new List<GameObject>();
 
 
+	void Awake(){
+		Instance = this;
+	}
 
 	void Start(){
 		//boardDimension = new Vector2(4,4);
@@ -125,10 +128,10 @@ public class LevelBuilder : MonoBehaviour
 	private void BuildBase(Vector2 boardSize){
 		tiles = new Tile[(int)boardSize.x, (int)boardSize.y];
 		int tileNumber = 0;
-		Debug.Log(tiles[0,0]);
-		if(tiles[0,0] == null){
-			Debug.Log("C");
-		}
+		// Debug.Log(tiles[0,0]);
+		// if(tiles[0,0] == null){
+		// 	Debug.Log("C");
+		// }
 		for(int i=0; i<boardSize.x; i++){
 			for(int j=0; j<boardSize.y; j++){
 				CreateTile(new Vector2(j,i), tileNumber);
