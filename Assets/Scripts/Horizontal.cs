@@ -1,9 +1,9 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class Vertical : MonoBehaviour{
+public class Horizontal : MonoBehaviour{
 
 	public enum Type {Color, Wall, Spikes, Portal, Unknown};
 
@@ -25,10 +25,10 @@ public class Vertical : MonoBehaviour{
 	// 	type = (Type)System.Enum.Parse(typeof(Type), nType);
 	// 	color = (Color)System.Enum.Parse(typeof(Color), nColor);
 	// }
-	public Vertical(){
+	public Horizontal(){
 		type = "None";
 	}
-	public Vertical(string nType){
+	public Horizontal(string nType){
 		type = nType;
 	}
 	void Awake(){

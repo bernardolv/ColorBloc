@@ -58,6 +58,8 @@ public class LevelBuilder : MonoBehaviour
 	// Will hold the Tile Classes which contain the object, its position, and it's type.
 	// The grid position will consist of its 2darray position
 	public Tile [,] tiles;
+	public Vertical [,] verticals;
+	public Horizontal [,] horizontals;
 
 	// Tile prefab for instantiation
 	public GameObject tileObject;
@@ -95,7 +97,7 @@ public class LevelBuilder : MonoBehaviour
 
 	}
 
-
+	//Makes Tile Bank
 	private void InitializeTileList(int size){
 		for(int i=0; i<size; i++){
 			GameObject newTile = (GameObject)Instantiate(tileObject,new Vector3(0,0,0), tileObject.transform.rotation);
@@ -115,6 +117,9 @@ public class LevelBuilder : MonoBehaviour
 		boardDimension = BoardSize(seed);
 		ResizeAssets();
 		BuildBase(boardDimension);
+		BuildVerticalBase(boardDimension);
+		BuildHorizontalBase(boardDimension);
+		Seed();
 	}
 
 
@@ -128,10 +133,6 @@ public class LevelBuilder : MonoBehaviour
 	private void BuildBase(Vector2 boardSize){
 		tiles = new Tile[(int)boardSize.x, (int)boardSize.y];
 		int tileNumber = 0;
-		// Debug.Log(tiles[0,0]);
-		// if(tiles[0,0] == null){
-		// 	Debug.Log("C");
-		// }
 		for(int i=0; i<boardSize.x; i++){
 			for(int j=0; j<boardSize.y; j++){
 				CreateTile(new Vector2(j,i), tileNumber);
@@ -140,6 +141,32 @@ public class LevelBuilder : MonoBehaviour
 		}
 	}
 
+	private void BuildVerticalBase(Vector2 boardSize){
+		verticals = new Vertical[(int)boardSize.x + 1, (int)boardSize.y];
+		int tileNumber = 0;
+		for(int i=0; i<boardSize.x; i++){
+			for(int j = 0; j-1<boardSize.y; j++){
+				verticals[j,i] = new Vertical();
+			}
+		}
+	}
+
+	private void BuildHorizontalBase(Vector2 boardSize){
+		horizontals = new Horizontal[(int)boardSize.x, (int)boardSize.y + 1];
+		int tileNumber = 0;
+		for(int i=0; i-1<boardSize.x; i++){
+			for(int j = 0; j<boardSize.y; j++){
+				horizontals[j,i] = new Horizontal();
+			}
+		}
+	}
+	private void Seed(){
+		horizontals[0,1].type = "Wall";
+		horizontals[3,4].type = "Wall";
+		verticals[5,1].type = "Wall";
+		verticals[3,0].type = "Wall";
+		verticals[1,3].type = "Wall";		
+	}
 	private void ResizeAssets(){
 
 	}

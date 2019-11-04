@@ -7,6 +7,7 @@ public class PlayerMovement : MonoBehaviour
 	public static PlayerMovement Instance;
 	public List<Vector2> pathTiles;
 	public int speed;
+
 	#region ScannerVariables
 	Vector2 currentPathTile;
 	string currentScanDirection;
@@ -35,8 +36,6 @@ public class PlayerMovement : MonoBehaviour
         	input = CheckForInput();
         }
 
-        //Debug.Log(input);
-
         //if input was gotten, scan the tiles to build the pathTiles list.
         if(input!= null){
         	blocIdle = false;
@@ -58,11 +57,17 @@ public class PlayerMovement : MonoBehaviour
     }
 
     private void MoveTowards(Vector2 direction){
-    	Debug.Log("moving");
-    		Vector3 nextTilePos = new Vector3(direction.x*100, direction.y*-100, 0);
-			transform.localPosition = Vector3.MoveTowards(transform.localPosition, nextTilePos, Time.deltaTime * speed); 
-		if(transform.localPosition.Equals(nextTilePos))
-			pathTiles.RemoveAt(0);
+    	Vector3 nextTilePos = new Vector3(direction.x*100, direction.y*-100, 0);
+		transform.localPosition = Vector3.MoveTowards(transform.localPosition, nextTilePos, Time.deltaTime * speed); 
+		if(transform.localPosition.Equals(nextTilePos)){
+            ActOnPosition();
+            pathTiles.RemoveAt(0);
+
+        }
+    }
+
+    private void ActOnPosition(){
+
     }
 
     //Runs through tiles data and populate the path that the player will then take.
@@ -93,6 +98,8 @@ public class PlayerMovement : MonoBehaviour
     	switch(direction){
     		case "Up":
     			ScanHorizontal(originPos);
+                if(finishedScanning)
+                    break;
     			//scan upwards if => 0
     			if(originPos.y != 0)
     				ScanTile(originPos + Vector2.down);
@@ -102,6 +109,8 @@ public class PlayerMovement : MonoBehaviour
     			break;
     		case "Down":
     			ScanHorizontal(originPos + Vector2.up);
+                if(finishedScanning)
+                    break;
 				if(originPos.y != boardSizeY-1)
 					ScanTile(originPos + Vector2.up);
 				else
@@ -110,6 +119,8 @@ public class PlayerMovement : MonoBehaviour
     			break;
     		case "Left":
     			ScanVertical(originPos);
+                if(finishedScanning)
+                    break;
     			if(originPos.x != 0)
     				ScanTile(originPos + Vector2.left);
     			else
@@ -118,6 +129,8 @@ public class PlayerMovement : MonoBehaviour
     			break;
     		case "Right":
     			ScanVertical(originPos + Vector2.right);
+                if(finishedScanning)
+                    break;
     			if(originPos.x != boardSizeX-1)
     				ScanTile(originPos + Vector2.right);
     			else
@@ -128,28 +141,55 @@ public class PlayerMovement : MonoBehaviour
     }
 
     private void ScanTile(Vector2 position){
-    	Debug.Log(position);
-    	Debug.Log("Tile type is +"  + LevelBuilder.Instance.tiles[(int)position.x, (int)position.y].type);
+        switch(LevelBuilder.Instance.tiles[(int)position.x, (int)position.y].type){
+            case "None":
+                pathTiles.Add(position);
+                break;
+            case "Goal":
+                //Something
+                break;
+        }
+           
     	
-    	pathTiles.Add(position);
     }
 
+    //Scans the assigned horizontal tile and acts on it
     private void ScanHorizontal(Vector2 position){
-
+        Vector2 convertedPosition = new Vector2(position.x, position.y - .5f);
+        switch(LevelBuilder.Instance.horizontals[(int)position.x, (int)position.y].type){
+            case "None":
+                if(position.y>0 && position.y<boardSizeY)
+                    pathTiles.Add(convertedPosition); 
+                break;
+            case "Wall":
+                finishedScanning = true;
+                break;
+        }
     }
 
+    //Scans the assigned vertical tile and acts on it
     private void ScanVertical(Vector2 position){
-
+        Vector2 convertedPosition = new Vector2(position.x -.5f, position.y);
+        switch(LevelBuilder.Instance.verticals[(int)position.x, (int)position.y].type){
+            case "None":
+                if(position.x>0 && position.x<boardSizeX)
+                    pathTiles.Add(convertedPosition); 
+                break;
+            case "Wall":
+                finishedScanning = true;
+                break;
+        }
+        
     }
     //returns string for keyhit with direction name, if none in that frame then return null
     private string CheckForInput(){
-    	if (Input.GetKeyDown (KeyCode.W))
+    	if (Input.GetKeyDown (KeyCode.W) || Input.GetKeyDown(KeyCode.UpArrow))
     		return "Up";
-    	if (Input.GetKeyDown (KeyCode.A))
+    	if (Input.GetKeyDown (KeyCode.A) || Input.GetKeyDown(KeyCode.LeftArrow))
     		return "Left";
-    	if (Input.GetKeyDown (KeyCode.S))
+    	if (Input.GetKeyDown (KeyCode.S) || Input.GetKeyDown(KeyCode.DownArrow))
     		return "Down";
-    	if (Input.GetKeyDown (KeyCode.D))
+    	if (Input.GetKeyDown (KeyCode.D) || Input.GetKeyDown(KeyCode.RightArrow))
     		return "Right";
     	return null;
     }
@@ -159,7 +199,7 @@ public class PlayerMovement : MonoBehaviour
     	Vector2 posToGive = new Vector2();
     	posToGive.x = Mathf.RoundToInt((float)(transform.localPosition.x/100f));
     	posToGive.y = -Mathf.RoundToInt((float)(transform.localPosition.y/100f));
-    	Debug.Log(posToGive);
+//    	Debug.Log(posToGive);
     	return posToGive;
     }
 }
