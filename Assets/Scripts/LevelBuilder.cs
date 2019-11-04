@@ -17,7 +17,8 @@ public class Tile{
 	// Used to take any special actions if there's any mechanic placed on that tile
 	public string type;
 
-
+	//Store the color of the tile type
+	public string color;
 
 	// Initializer with empty tile
 	public Tile(GameObject nMyObject, Vector2 nGridPos, Vector2 nWorldPosition){
@@ -36,10 +37,15 @@ public class Tile{
 		type = nType;
 	}
 
+	public Tile(GameObject nMyObject, Vector2 nGridPos, Vector2 nWorldPosition, GameObject occupier, string nType, string nColor){
+		myObject = nMyObject;
+		gridPosition = nGridPos;
+		worldPosition = nWorldPosition;
+		type = nType;
+		color = nColor;		
+	}
+
 }
-
-
-
 
 public class LevelBuilder : MonoBehaviour
 {	
@@ -52,10 +58,6 @@ public class LevelBuilder : MonoBehaviour
 	// Will hold the Tile Classes which contain the object, its position, and it's type.
 	// The grid position will consist of its 2darray position
 	public Tile [,] tiles;
-
-	//public Column[,] columns;
-
-	//public Row[,] rows;
 
 	// Tile prefab for instantiation
 	public GameObject tileObject;
@@ -81,7 +83,7 @@ public class LevelBuilder : MonoBehaviour
 
 
 	void Start(){
-		boardDimension = new Vector2(6,6);
+		//boardDimension = new Vector2(4,4);
 		int tileSize = (int)boardDimension.x * (int)boardDimension.y;
 		Debug.Log(tileSize + " number of tiles");
 		InitializeTileList(tileSize);
@@ -123,6 +125,10 @@ public class LevelBuilder : MonoBehaviour
 	private void BuildBase(Vector2 boardSize){
 		tiles = new Tile[(int)boardSize.x, (int)boardSize.y];
 		int tileNumber = 0;
+		Debug.Log(tiles[0,0]);
+		if(tiles[0,0] == null){
+			Debug.Log("C");
+		}
 		for(int i=0; i<boardSize.x; i++){
 			for(int j=0; j<boardSize.y; j++){
 				CreateTile(new Vector2(j,i), tileNumber);
