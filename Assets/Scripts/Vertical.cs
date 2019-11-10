@@ -9,6 +9,8 @@ public class Vertical : MonoBehaviour{
 
 	public enum Color {Yellow, Red, Blue, Orange, Purple, Green, Unknown};
 	
+	public Type typeGiver;
+	//public Type myType;
 	//type of Vertical
 	public string type;
 

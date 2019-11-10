@@ -161,11 +161,20 @@ public class LevelBuilder : MonoBehaviour
 		}
 	}
 	private void Seed(){
-		horizontals[0,1].type = "Wall";
-		horizontals[3,4].type = "Wall";
+		
+		horizontals[0,1].type = "Color";
+		horizontals[0,1].color = (Horizontal.Color)System.Enum.Parse(typeof(Horizontal.Color), "Blue");
+
+		horizontals[3,4].type = "Color";
+		horizontals[3,4].color = (Horizontal.Color)System.Enum.Parse(typeof(Horizontal.Color), "Red");
+
 		verticals[5,1].type = "Wall";
-		verticals[3,0].type = "Wall";
-		verticals[1,3].type = "Wall";		
+
+		verticals[3,0].type = "Color";
+		verticals[3,0].color = (Vertical.Color)System.Enum.Parse(typeof(Vertical.Color), "Red");
+
+		verticals[1,3].type = "Color";	
+		verticals[1,3].color = (Vertical.Color)System.Enum.Parse(typeof(Vertical.Color), "Blue");	
 	}
 	private void ResizeAssets(){
 
