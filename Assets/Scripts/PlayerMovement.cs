@@ -33,6 +33,11 @@ public class PlayerMovement : MonoBehaviour
         paused = false;
         color = "White";
     }
+    void Reset(){
+        blocIdle = true;
+        paused = false;
+        color = "White";
+    }
 
     // Update is called once per frame
     void Update()
@@ -173,7 +178,13 @@ public class PlayerMovement : MonoBehaviour
             	if(LevelBuilder.Instance.horizontals[(int)position.x, (int)position.y].color.ToString() == color)
             		finishedScanning = true;
             	else{
-            		color = LevelBuilder.Instance.horizontals[(int)position.x, (int)position.y].color.ToString();
+            		color = AddColor(LevelBuilder.Instance.horizontals[(int)position.x, (int)position.y].color.ToString());
+                    Debug.Log(color);
+
+                    AssignColor(color);
+                    if(color == "Purple" || color == "Green" || color == "Orange"){
+                        ChangeColorWalls(color);
+                    }                    
 					if(position.y>0 && position.y<boardSizeY)
                    		pathTiles.Add(convertedPosition);             		
             	}
@@ -183,6 +194,7 @@ public class PlayerMovement : MonoBehaviour
 
     //Scans the assigned vertical tile and acts on it
     private void ScanVertical(Vector2 position){
+        //Debug.Log(color);
         Vector2 convertedPosition = new Vector2(position.x -.5f, position.y);
         switch(LevelBuilder.Instance.verticals[(int)position.x, (int)position.y].type){
             case "None":
@@ -193,6 +205,7 @@ public class PlayerMovement : MonoBehaviour
                 finishedScanning = true;
                 break;
             case "Color":
+                Debug.Log(color);
             	if(LevelBuilder.Instance.verticals[(int)position.x, (int)position.y].color.ToString() == color)
             		finishedScanning = true;
             	else{
@@ -213,25 +226,27 @@ public class PlayerMovement : MonoBehaviour
     private void ChangeColorWalls(string newColor){
     	boardSizeX = (int)LevelBuilder.Instance.boardDimension.x;
     	boardSizeY = (int)LevelBuilder.Instance.boardDimension.y;
-
+        Horizontal[,] curHorizontals = LevelBuilder.Instance.horizontals;
     	for(int i=0; i-1<boardSizeX; i++){
 			for(int j = 0; j<boardSizeY; j++){
-				if(LevelBuilder.Instance.horizontals[j,i].type == "Color"){
-					if((LevelBuilder.Instance.horizontals[j,i].color == Horizontal.Color.Red || LevelBuilder.Instance.horizontals[j,i].color ==Horizontal.Color.Blue) && newColor == "Purple"){
+				if(curHorizontals[j,i].type == "Color"){
+					if((curHorizontals[j,i].color == Horizontal.Color.Red || curHorizontals[j,i].color ==Horizontal.Color.Blue) && newColor == "Purple"){
 						LevelBuilder.Instance.horizontals[j,i].color = Horizontal.Color.Purple;
 					}
 				}
 			}
 		}
+        Vertical[,] curVerticals = LevelBuilder.Instance.verticals;
     	for(int i=0; i<boardSizeX; i++){
 			for(int j = 0; j-1<boardSizeY; j++){
-				if(LevelBuilder.Instance.verticals[j,i].type == "Color"){
-					if((LevelBuilder.Instance.verticals[j,i].color == Vertical.Color.Red || LevelBuilder.Instance.verticals[j,i].color == Vertical.Color.Blue) && newColor == "Purple"){
+				if(curVerticals[j,i].type == "Color"){
+					if((curVerticals[j,i].color == Vertical.Color.Red || curVerticals[j,i].color == Vertical.Color.Blue) && newColor == "Purple"){
 						LevelBuilder.Instance.verticals[j,i].color = Vertical.Color.Purple;
 					}
 				}
 			}
 		}
+        PieceHandler.Instance.ColorWalls(newColor);
     }
 
     //returns string for keyhit with direction name, if none in that frame then return null
@@ -274,64 +289,60 @@ public class PlayerMovement : MonoBehaviour
     }
 
     private string AddColor(string newColor){
+        Debug.Log(color);
     	switch(color){
     		case "White":
     			return newColor;
-    			break;
     		case "Blue":
     			switch(newColor){
     				case "Red":
     					return "Purple";
-    				case "Blue":
-    					return "Blue";
     				case "Yellow":
     					return "Green";
+                    default:
+                        return color;
     			}
-    			break;
     		case "Red":
     			switch(newColor){
-    				case "Red":
-    					return "Red";
     				case "Blue":
     					return "Purple";
     				case "Yellow":
     					return "Orange";
+                    default:
+                        return color;
     			}
     			break;
+
     		case "Yellow":
     			switch(newColor){
     				case "Red":
     					return "Orange";
     				case "Blue":
     					return "Green";
-    				case "Yellow":
-    					return "Yellow";
+                    default:
+                        return color;;
     			}
-    			break;
     		case "Purple":
     				switch(newColor){
     					case "White":
     						return "White";
     					default:
-    							return "Purple";
+    						return color;
     				}
-    				break;
     		case "Orange":
     				switch(newColor){
     					case "White":
     						return "White";
     					default:
-    						return "Orange";
+    						return color;
     				}
-    				break;
     		case "Green":
     				switch(newColor){
     					case "White":
     						return "White";
     					default:
-    						return "Green";
+    						return color;
     				}
-    				break;
     	}
     	return newColor;
     	//if(color == "White")

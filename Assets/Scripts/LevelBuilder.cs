@@ -92,8 +92,10 @@ public class LevelBuilder : MonoBehaviour
 		int tileSize = (int)boardDimension.x * (int)boardDimension.y;
 		Debug.Log(tileSize + " number of tiles");
 		InitializeTileList(tileSize);
+
 		//BuildBase(boardDimension);
 		BuildMap("Test");
+		PieceHandler.Instance.PopulatePieces();
 
 	}
 
