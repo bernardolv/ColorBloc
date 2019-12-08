@@ -17,6 +17,9 @@ public class Vertical : MonoBehaviour{
 	//color of Vertical
 	public Color color;
 
+	//current color of Vertical (before any changes)
+	public Color currentColor;
+	
 	//Location in array
 	public Vector2 gridPosition;
 

@@ -5,17 +5,26 @@ using UnityEngine.UI;
 
 public class PieceHandler : MonoBehaviour
 {
+	//Singleton
 	public static PieceHandler Instance;
 
+	//holds the placed verical gameobjects
 	public GameObject verticalHolder;
 
+	//used for quick access to all placedverticals
 	public List<GameObject> placedVerticals = new List<GameObject>();
 
+	//holds the placed horizontal gameobjects
 	public GameObject horizontalHolder;
 
+	//used for quick access to all placedhorizontals
 	public List<GameObject> placedHorizontals = new List<GameObject>();
 
-	//public Tile[] placedTiles;
+	//holds the placed tile gameobjects
+	public GameObject tileHolder;
+
+	//used for quick access to all placedtiles
+	public List<GameObject> placedTiles = new List<GameObject>();
 
     // Start is called before the first frame update
     void Awake()
@@ -29,11 +38,14 @@ public class PieceHandler : MonoBehaviour
         
     }
 
+    //call this to populate placedverticals and placedhorizontals
     public void PopulatePieces(){
     	PopulateVerticals();
     	PopulateHorizontals();
     }
 
+
+    //populate a group only with placed verticals as opposed to the grid
     public void PopulateVerticals(){
 		foreach(Transform child in verticalHolder.transform)
 		{
@@ -42,6 +54,7 @@ public class PieceHandler : MonoBehaviour
 		}    	
 	}
 
+	//populate a group only with placed horizontals as opposed to the grid
     public void PopulateHorizontals(){
 		foreach(Transform child in horizontalHolder.transform)
 		{
@@ -50,6 +63,16 @@ public class PieceHandler : MonoBehaviour
 		}    	
 	}
 
+	//populate a group only with placed tiles as opposed to the grid
+    public void PopulateTiles(){
+		foreach(Transform child in horizontalHolder.transform)
+		{
+		    //Something(child.gameObject);
+		    placedHorizontals.Add(child.gameObject);
+		}    	
+	}
+
+	//This paints the base colors into the gotten secondaryColor
 	public void ColorWalls(string newColor){
 		for(int i = 0; i<placedVerticals.Count;i++){
 			string curColor = placedVerticals[i].transform.GetComponent<Vertical>().color.ToString();

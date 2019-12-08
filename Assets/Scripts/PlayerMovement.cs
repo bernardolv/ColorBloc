@@ -150,13 +150,15 @@ public class PlayerMovement : MonoBehaviour
     	}
     }
 
+    //Scans the assigned tile
     private void ScanTile(Vector2 position){
         switch(LevelBuilder.Instance.tiles[(int)position.x, (int)position.y].type){
             case "None":
                 pathTiles.Add(position);
                 break;
             case "Goal":
-                //Something
+                pathTiles.Add(position);
+                Debug.Log("GOALQEUED");
                 break;
         }
            

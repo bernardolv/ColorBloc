@@ -143,6 +143,7 @@ public class LevelBuilder : MonoBehaviour
 		}
 	}
 
+	//Used to build the base of the grid for vertical tiles (Columns)
 	private void BuildVerticalBase(Vector2 boardSize){
 		verticals = new Vertical[(int)boardSize.x + 1, (int)boardSize.y];
 		int tileNumber = 0;
@@ -153,6 +154,7 @@ public class LevelBuilder : MonoBehaviour
 		}
 	}
 
+	//Used to build the base of the grid for horizontal tiles (Rows)
 	private void BuildHorizontalBase(Vector2 boardSize){
 		horizontals = new Horizontal[(int)boardSize.x, (int)boardSize.y + 1];
 		int tileNumber = 0;
@@ -162,6 +164,8 @@ public class LevelBuilder : MonoBehaviour
 			}
 		}
 	}
+
+	//Seeding Map into the base of the grid
 	private void Seed(){
 		
 		horizontals[0,1].type = "Color";
@@ -175,9 +179,12 @@ public class LevelBuilder : MonoBehaviour
 		verticals[3,0].type = "Color";
 		verticals[3,0].color = (Vertical.Color)System.Enum.Parse(typeof(Vertical.Color), "Red");
 
-		verticals[1,3].type = "Color";	
+		verticals[1,3].type = "Color";
 		verticals[1,3].color = (Vertical.Color)System.Enum.Parse(typeof(Vertical.Color), "Blue");	
+
+		tiles[4,1].type = "Goal";
 	}
+
 	private void ResizeAssets(){
 
 	}
