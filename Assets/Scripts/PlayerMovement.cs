@@ -6,10 +6,15 @@ using UnityEngine.UI;
 public class PlayerMovement : MonoBehaviour
 {
 	public static PlayerMovement Instance;
+    //every tile to which the player will move, in the required order. 
 	public List<Vector2> pathTiles;
+    //speed ofbloc movement
 	public int speed;
+    //paused is used to filter out controls when paused
 	public bool paused;
+    //current color
 	public string color;
+    //current Sprite
 	public Image blocColor;
 
 	#region ScannerVariables
@@ -42,28 +47,37 @@ public class PlayerMovement : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        //if colorbloc idle, try to get input
-        if(blocIdle){
-        	input = CheckForInput();
-        }
 
-        //if input was gotten, scan the tiles to build the pathTiles list.
-        if(input!= null){
-        	blocIdle = false;
-         	ScanPath(input);
-         	input = null;
+        if(blocIdle){
+            ScanAndPopulate();
         }
 
         //Move if there are pending tiles in the path
         if(pathTiles.Count != 0){
         	MoveTowards(pathTiles[0]);
         }
+
         //if no more pathtiles, give blocidle status
         if(pathTiles.Count == 0 && blocIdle == false && !paused)
         	blocIdle = true;
 
         //if no more tiles on the path, give blocidle state
 
+
+    }
+
+    //Checks for direction input and go through the data map to populate the pathtiles
+    private void ScanAndPopulate(){
+
+        //if colorbloc idle, try to get input
+        input = CheckForInput();
+
+        //if input was gotten, scan the tiles to build the pathTiles list.
+        if(input!= null){
+            blocIdle = false;
+            ScanPath(input);
+            input = null;
+        }
 
     }
 
@@ -107,46 +121,72 @@ public class PlayerMovement : MonoBehaviour
     //Scan the next "tile set" of tiles and vert/horizontal depending   
     private void ScanNextAndPopulate(Vector2 originPos, string direction){
     	switch(direction){
+
     		case "Up":
+                //Scan inbetween
     			ScanHorizontal(originPos);
+
                 if(finishedScanning)
                     break;
+                //scan tile
     			if(originPos.y != 0)
     				ScanTile(originPos + Vector2.down);
+
+                //if outofbounds
     			else
     				finishedScanning = true;
-    			currentPathTile = originPos + Vector2.down;
+    			
+                currentPathTile = originPos + Vector2.down;
     			break;
+
     		case "Down":
+
     			ScanHorizontal(originPos + Vector2.up);
+
                 if(finishedScanning)
                     break;
+
 				if(originPos.y != boardSizeY-1)
 					ScanTile(originPos + Vector2.up);
+
 				else
     				finishedScanning = true;
+
     			currentPathTile = originPos + Vector2.up;
     			break;
+
     		case "Left":
+
     			ScanVertical(originPos);
+
                 if(finishedScanning)
                     break;
+
     			if(originPos.x != 0)
     				ScanTile(originPos + Vector2.left);
+
     			else
     				finishedScanning = true;
+
     			currentPathTile = originPos + Vector2.left;
     			break;
+
     		case "Right":
+
     			ScanVertical(originPos + Vector2.right);
+
                 if(finishedScanning)
                     break;
+
     			if(originPos.x != boardSizeX-1)
     				ScanTile(originPos + Vector2.right);
+
     			else
     				finishedScanning = true;
+                    
     			currentPathTile = originPos + Vector2.right;
     			break;
+
     	}
     }
 
